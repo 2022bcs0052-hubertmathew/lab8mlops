@@ -1,34 +1,36 @@
 name: ML Pipeline
 on:
-push:
-branches:
-- main
+  push:
+    branches:
+      - main
 
 jobs:
-build:
-runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-steps:
-  - uses: actions/checkout@v3
+    steps:
 
-  - name: Setup Python
-    uses: actions/setup-python@v4
-    with:
-      python-version: "3.9"
+    - name: Checkout Repository
+      uses: actions/checkout@v3
 
-  - name: Install dependencies
-    run: |
-      pip install -r requirements.txt
-      pip install dvc[s3]
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
 
-  - name: Pull dataset
-    run: dvc pull
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install dvc[s3]
 
-  - name: Train model
-    run: python src/train.py
+    - name: Pull dataset
+      run: dvc pull
 
-  - name: Upload metrics
-    uses: actions/upload-artifact@v3
-    with:
-      name: metrics
-      path: metrics.json
+    - name: Train model
+      run: python src/train.py
+
+    - name: Upload metrics
+      uses: actions/upload-artifact@v3
+      with:
+        name: metrics
+        path: metrics.json
